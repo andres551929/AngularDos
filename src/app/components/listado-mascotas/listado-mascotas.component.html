@@ -2,24 +2,28 @@
   <h1>Listado de Mascotas</h1>
 </div>
 <div class="container">
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z24">
+  <mat-form-field>
+    <mat-label>Filtro</mat-label>
+    <input matInput (keyup)="applyFilter($event)"  placeholder="Buscar" #input autocomplete="off">
+  </mat-form-field>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z24" matSort>
 
     <!--- Note that these columns can be defined in any order.
           The actual rendered columns are set as a property on the row definition" -->
 
     <!-- Position Column -->
     <ng-container matColumnDef="nombre">
-      <th mat-header-cell *matHeaderCellDef> Nombre </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
       <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
     </ng-container>
 
     <ng-container matColumnDef="edad">
-      <th mat-header-cell *matHeaderCellDef> Edad </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Edad </th>
       <td mat-cell *matCellDef="let element"> {{element.edad}} </td>
     </ng-container>
 
     <ng-container matColumnDef="raza">
-      <th mat-header-cell *matHeaderCellDef> Raza </th>
+      <th mat-header-cell *matHeaderCellDef > Raza </th>
       <td mat-cell *matCellDef="let element"> {{element.raza}} </td>
     </ng-container>
 
@@ -33,6 +37,14 @@
       <td mat-cell *matCellDef="let element"> {{element.peso}} </td>
     </ng-container>
 
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-icon class="search" fontIcon="search" matTooltip="Ver"></mat-icon>
+        <mat-icon class="edit" fontIcon="edit" matTooltip="Editar"></mat-icon>
+        <mat-icon class="delete" fontIcon="delete" matTooltip="Eliminar "></mat-icon>
+      </td>
+    </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

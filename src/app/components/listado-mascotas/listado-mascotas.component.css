@@ -11,9 +11,28 @@ table {
 }
 
 .container{
-  margin: 0 20%;
+  margin: 0 5%;
 }
 
 td, th {
   width: 15%;
+}
+
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.delete {
+  cursor: pointer;
+  color: #E15639;
+}
+
+.edit{
+  cursor: pointer;
+  color: #1878b0;
+}
+
+.search{
+  cursor: pointer;
 }
