@@ -8,7 +8,10 @@ const routes: Routes = [
   {path:'', redirectTo: 'listMascotas', pathMatch: 'full'},
   { path: 'listMascotas', component: ListadoMascotasComponent },
   { path: 'agregarMascota', component: AgregarEditarMascotaComponent },
-  { path: 'verMascota', component: VerMascotaComponent }
+  { path: 'verMascota/:id', component: VerMascotaComponent },
+  { path: 'editarMascota/:id', component: AgregarEditarMascotaComponent },
+  {path: '**', redirectTo: 'listMascotas', pathMatch: 'full' }
+
 
 ];
 

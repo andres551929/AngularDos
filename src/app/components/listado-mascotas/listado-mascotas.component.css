@@ -3,16 +3,7 @@ table {
 }
 
 
-.title{
-  padding: 30px;
-  background: #666;
-  text-align: center;
-  color: white
-}
 
-.container{
-  margin: 0 5%;
-}
 
 td, th {
   width: 15%;
