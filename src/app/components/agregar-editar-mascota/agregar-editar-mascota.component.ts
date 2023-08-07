@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Mascota } from 'src/app/interfaces/mascota';
+import { MascotaService } from 'src/app/services/mascota.service';
 
 @Component({
   selector: 'app-agregar-editar-mascota',
@@ -10,9 +13,15 @@ import { Mascota } from 'src/app/interfaces/mascota';
 export class AgregarEditarMascotaComponent implements OnInit {
 
   loading: boolean = false;
-  form: FormGroup
+  form: FormGroup;
+  id: number;
+  operacion: string = "Agregar";
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private _mascotaService: MascotaService,
+    private _snackBar: MatSnackBar,
+    private router: Router,
+    private aRoute: ActivatedRoute) {
     this.form = this.fb.group({
       nombre: ['', Validators.required],
       raza: ['', Validators.required],
@@ -20,14 +29,33 @@ export class AgregarEditarMascotaComponent implements OnInit {
       edad: ['', Validators.required],
       peso: ['', Validators.required],
     })
+
+    this.id = Number(this.aRoute.snapshot.paramMap.get('id'));
+    console.log(this.id);
   }
 
   ngOnInit(): void {
+    if (this.id != 0) {
+      this.operacion = "Editar";
+      this.obtenerMascota(this.id);
+    }
   }
 
-  agregarMascota() {
-    const nombre = this.form.get('nombre')?.value;
+  obtenerMascota(id: number) {
+    this.loading = true;
+    var mascota = this._mascotaService.getMascota(id).subscribe(data => {
+      this.loading = false;
+      this.form.patchValue({
+        nombre: data.nombre,
+        raza: data.raza,
+        color: data.color,
+        peso: data.peso,
+        edad : data.edad
+      })
+    });
+  }
 
+  agregarEditarMascota() {
     const mascota: Mascota = {
       nombre: this.form.get('nombre')?.value,
       raza: this.form.get('raza')?.value,
@@ -35,7 +63,35 @@ export class AgregarEditarMascotaComponent implements OnInit {
       edad: this.form.get('edad')?.value,
       peso: this.form.get('peso')?.value
     }
+    if (this.id != 0) {
+      mascota.id=this.id;
+      this.editarMascota(this.id, mascota);
+    } else {
+      this.agregarMascota(mascota);
+    }
 
-    console.log(mascota);
+  }
+
+  editarMascota(id: number, mascota: Mascota){
+    this._mascotaService.updateMascota(id,mascota).subscribe(data =>{
+      this.mensajeExito('editada');
+      this.router.navigate(['listMascotas'])
+    })
+  }
+
+  agregarMascota(mascota: Mascota){
+    this._mascotaService.addMascota(mascota).subscribe(data => {
+      // this.form.reset();
+      this.mensajeExito("agregada");
+      this.router.navigate(['listMascotas'])
+    });
+
+  }
+
+  mensajeExito(mensaje: string) {
+    this._snackBar.open('La mascota fue ' +mensaje+' con exito', '', {
+      duration: 2000,
+      horizontalPosition: 'right'
+    });
   }
 }

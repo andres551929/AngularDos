@@ -16,7 +16,7 @@ import { MascotaService } from 'src/app/services/mascota.service';
 })
 export class ListadoMascotasComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['nombre', 'edad', 'raza', 'peso', 'color', 'acciones'];
+  displayedColumns: string[] = ['index', 'nombre', 'edad', 'raza', 'peso', 'color', 'acciones'];
   dataSource = new MatTableDataSource<Mascota>();
   loading: boolean = false;
 
@@ -61,14 +61,22 @@ export class ListadoMascotasComponent implements OnInit, AfterViewInit {
     })
   }*/
 
-  eliminarMascota() {
+  eliminarMascota(id: number) {
     this.loading = true;
-    setTimeout(() => {
+    this._mascotaService.deleteMascota(id).subscribe(() => {
+      this.mensajeExito();
       this.loading = false;
-      this._snackBar.open('La mascota fue eliminada con exito', '', {
-        duration: 2000,
-        horizontalPosition: 'right'
-      });
-    }, 3000);
+      this.obtenerMascotas();
+     });
+
+
+
+  }
+
+  mensajeExito() {
+    this._snackBar.open('La mascota fue eliminada con exito', '', {
+      duration: 2000,
+      horizontalPosition: 'right'
+    });
   }
 }
